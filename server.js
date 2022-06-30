@@ -22,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 //});
 // simple route
 app.get("/test-deploy", (req, res) => {
+  return res.send("send")
+})
 require('./routes/auth_route')(app);
 
 // set port, listen for requests
