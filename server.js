@@ -21,14 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 //   console.log("Drop and re-sync db.");
 //});
 // simple route
+app.get("/test-deploy", (req, res) => {
 require('./routes/auth_route')(app);
-
-
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
