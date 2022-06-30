@@ -21,7 +21,7 @@ const db = require("./app/models");
 //   console.log("Drop and re-sync db.");
 //});
 // simple route
-app.get("/", (req, res) => {
+app.get("/test-deploy", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
 require("./app/routes/tutorial.routes")(app);
