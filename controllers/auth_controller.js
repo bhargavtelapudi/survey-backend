@@ -9,7 +9,22 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 
-
+exports.sign_up = (req, res) => {
+  // Save User to Database
+  User.create({
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8),
+    user_type: req.body.user_type ? req.body.user_type : "admin",
+  })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      console.log("error");
+      res.status(500).send({ message: err.message });
+    });
+};
 
 exports.signin = (req, res) => {
   User.findOne({

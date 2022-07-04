@@ -10,7 +10,11 @@ module.exports = function (app) {
     next();
   });
 
- 
+  app.post(
+    "/api/auth/register",
+  helper.check_duplicate_email,
+    controller.sign_up
+  );
 
   app.post("/api/auth/signin", controller.signin);
 
