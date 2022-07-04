@@ -11,7 +11,7 @@ var bcrypt = require("bcryptjs");
 
 
 
-exports.signin = (req, res) => {
+exports.user_signin = (req, res) => {
   User.findOne({
     where: {
       email: req.body.email
