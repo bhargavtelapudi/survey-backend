@@ -26,7 +26,8 @@ exports.sign_up = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+
+exports.user_signin = (req, res) => {
   User.findOne({
     where: {
       email: req.body.email

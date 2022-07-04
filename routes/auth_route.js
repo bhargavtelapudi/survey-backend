@@ -16,6 +16,7 @@ module.exports = function (app) {
     controller.sign_up
   );
 
-  app.post("/api/auth/signin", controller.signin);
+   app.post("/api/auth/login", controller.user_signin);
+
 
 };
