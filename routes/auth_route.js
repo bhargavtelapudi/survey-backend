@@ -1,6 +1,6 @@
 const helper = require("../services/helper")
 const controller = require("../controllers/auth_controller");
-
+const protect = require("../protect")
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
