@@ -21,8 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 //   console.log("Drop and re-sync db.");
 //});
 // simple route
-app.get("/test-deploy", (req, res) => {
-  return res.send("send")
+app.get("/api/test-deploy", (req, res) => {
+  return res.send("api is working")
 })
 require('./routes/auth_route')(app);
 
