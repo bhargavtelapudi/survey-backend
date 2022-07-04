@@ -12,6 +12,10 @@ module.exports = (sequelize, Sequelize) => {
       jwt_token: {
         type: Sequelize.STRING
       },
+      organization:{
+        type:Sequelize.STRING,
+        default:'self'
+      },
       user_type: {
         type: Sequelize.ENUM("super_admin", "admin"),
         default: 'admin'
