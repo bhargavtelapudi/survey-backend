@@ -43,9 +43,9 @@ exports.user_signin = (req, res) => {
       user.save()
       res.status(200).send({
         id: user.id,
-        username: user.username,
+        user_name: user.user_name,
         email: user.email,
-        userType: user.userType,
+        user_type: user.user_type,
         accessToken: token
       });
 
