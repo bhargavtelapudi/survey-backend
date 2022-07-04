@@ -35,4 +35,4 @@ jobs:
           command: |
             cd nodeapps/survey-backend
             npm install
-            sudo systemctl start survey-backend
+            sudo systemctl restart survey-backend
