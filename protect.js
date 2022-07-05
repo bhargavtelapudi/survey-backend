@@ -30,14 +30,14 @@ isSuperAdmin = (req, res, next) => {
         message: "Unauthorized!"
       });
     }
-    if (user.userType === "admin") {
+    if (user.user_type === "admin") {
       next();
       return;
     }
 
 
     res.status(403).send({
-      message: " super_admin can only access this api!"
+      message: " you are trying to access restricted API!"
     });
     return;
 
