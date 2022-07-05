@@ -11,7 +11,7 @@ var bcrypt = require("bcryptjs");
 
 exports.sign_up = (req, res) => {
   let organization;
-  if(req.body.user_type == "user" && req.body.organization !=='') {
+  if(req.body.user_type == "user" && req.body.organization !=='' && req.body.organization == null) {
     organization = req.body.organization
   }else{
     organization = "self"
