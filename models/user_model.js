@@ -17,8 +17,7 @@ module.exports = (sequelize, Sequelize) => {
         default:'self'
       },
       user_type: {
-        type: Sequelize.ENUM("super_admin", "admin"),
-        default: 'admin'
+        type: Sequelize.ENUM("admin", "user"),
       }
     });
   

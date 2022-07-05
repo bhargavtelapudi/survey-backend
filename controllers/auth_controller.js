@@ -11,7 +11,7 @@ var bcrypt = require("bcryptjs");
 
 exports.sign_up = (req, res) => {
   let organization;
-  if(req.body.user_type == "admin" && req.body.organization !=='') {
+  if(req.body.user_type == "user" && req.body.organization !=='') {
     organization = req.body.organization
   }else{
     organization = "self"
@@ -21,7 +21,7 @@ exports.sign_up = (req, res) => {
     user_name: req.body.user_name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
-    user_type: req.body.user_type ? req.body.user_type : "admin",
+    user_type: req.body.user_type ? req.body.user_type : "user",
     organization: organization
   })
     .then((user) => {
