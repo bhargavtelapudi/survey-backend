@@ -11,10 +11,8 @@ var bcrypt = require("bcryptjs");
 
 exports.sign_up = (req, res) => {
   let organization;
-  if(req.body.user_type == "user" && req.body.organization !=='') {
-    organization = req.body.organization
-  }else{
-    organization = "self"
+  if(req.body.organization == undefined){
+    organization ="self"
   }
   // Save User to Database
   User.create({
