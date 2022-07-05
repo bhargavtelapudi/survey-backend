@@ -25,7 +25,7 @@ app.get("/api/test-deploy", (req, res) => {
   return res.send("api is working")
 })
 require('./routes/auth_route')(app);
-require('./routes/admin_route')(app);
+require('./routes/user_route')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
