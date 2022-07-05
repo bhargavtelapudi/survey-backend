@@ -8,7 +8,7 @@ verifyToken = async (req, res, next) => {
 
   if (!token) {
     return res.status(403).send({
-      message: "token required!"
+      message: "token is required to access this API!"
     });
   }
 
