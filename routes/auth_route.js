@@ -18,5 +18,5 @@ module.exports = function (app) {
 
    app.post("/api/auth/login", controller.user_signin);
 
-
+   app.get("/api/auth/logout/:userId",[protect.verifyToken], controller.user_logout);
 };
