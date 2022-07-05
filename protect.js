@@ -30,7 +30,7 @@ isSuperAdmin = (req, res, next) => {
         message: "Unauthorized!"
       });
     }
-    if (user.userType === "super_admin") {
+    if (user.userType === "admin") {
       next();
       return;
     }
