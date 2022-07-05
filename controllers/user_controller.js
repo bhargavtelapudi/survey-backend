@@ -30,3 +30,16 @@ exports.users_list = (req, res) => {
       });
   };
   
+
+  exports.survey_list = (req, res) => {
+    //find all users
+   User.findOne({
+      where: {
+        id: req.userId
+      },
+      include: [
+        { model: db.survey, as: 'survey' }]
+    }).then(userlist => {
+      return res.status(200).send(userlist);
+    })
+  };
