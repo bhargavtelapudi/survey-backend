@@ -43,3 +43,26 @@ exports.users_list = (req, res) => {
       return res.status(200).send(userlist);
     })
   };
+  
+  exports.delete_survey = (req, res) => {
+    const id = req.params.surveyId;
+    Survey.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Survey was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Survey  with id=${id}. Maybe Survey was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete survey with id=" + id
+        });
+      });
+  };
