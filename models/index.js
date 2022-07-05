@@ -25,6 +25,12 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("../models/user_model")(sequelize, Sequelize);
+db.survey = require("../models/survey_model")(sequelize,Sequelize)
 
-
+db.user.hasMany(db.survey, {
+  as: 'survey'
+});
+db.survey.belongsTo(db.user, {
+  foreignKey: 'userId', as: 'user',
+});
 module.exports = db;

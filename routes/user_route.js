@@ -12,4 +12,6 @@ module.exports = function (app) {
     });
   
 app.get("/api/admin/userlist", [protect.verifyToken,protect.isSuperAdmin], admin_controller.users_list);
+app.post("/api/create/survey", [protect.verifyToken], admin_controller.create_survey);
+
 }
