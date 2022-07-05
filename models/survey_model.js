@@ -1,16 +1,16 @@
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("users", {
+    const Survey = sequelize.define("surveys", {
       survey_title: {
         type: Sequelize.STRING
       },
-      survey_: {
+      survey_description: {
         type: Sequelize.STRING
       },
-      survey_: {
-        type: Sequelize.STRING
+      survey_isPublished: {
+        type: Sequelize.BOOLEAN
       }
     });
   
-    return User;
+    return Survey;
   };
   
