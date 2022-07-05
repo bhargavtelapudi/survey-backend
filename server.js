@@ -13,7 +13,7 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // set up database 
-const db = require("./app/models");
+ const db = require("./models");
 // for not to recreate each time database but add new things
  db.sequelize.sync();
 // for devel to recreate each time database 
@@ -21,11 +21,12 @@ const db = require("./app/models");
 //   console.log("Drop and re-sync db.");
 //});
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-require("./app/routes/tutorial.routes")(app);
-require("./app/routes/lesson.routes")(app);
+app.get("/api/test-deploy", (req, res) => {
+  return res.send("api is working")
+})
+require('./routes/auth_route')(app);
+require('./routes/user_route')(app);
+
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
