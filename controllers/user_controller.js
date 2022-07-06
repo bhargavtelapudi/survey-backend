@@ -35,7 +35,7 @@ exports.users_list = (req, res) => {
     //find all users
    User.findOne({
       where: {
-        id: req.userId
+        id: req.params.userId
       },
       include: [
         { model: db.survey, as: 'survey' }]
