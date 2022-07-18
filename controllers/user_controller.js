@@ -1,7 +1,8 @@
 const db = require("../models");
 const config = require("../config/auth_config");
 const User = db.user;
-const Survey = db.survey
+const survey = db.survey
+const services = require("../services/survey")
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -13,20 +14,35 @@ exports.users_list = (req, res) => {
     })
   };
 
-  exports.create_survey = (req, res) => {
-    
-    // Save survey to Database
-    Survey.create({
-      survey_title : req.body.title,
-      survey_description: req.body.description,
-      userId:req.userId
-    })
-      .then((survey) => {
-        res.status(200).send(survey);
+  exports.create_survey = async(req, res) => {
+    try {
+      //check title and description coming in body or not
+      if (!req.body.title || !req.body.description) {
+        return res.status(400).json({
+          message: "title and description required to create survey"
+        })
+      }
+      //save data in survey table
+      let survey_details = await services.create_survey(req.body.title,req.body.description,req.body.isPublished,req.userId)
+      //let survey_details = await surveyServices.create_survey(req.body.title, req.body.description, false, req.userId)
+      for (let i = 0; i < req.body.questions.length; i++) {     
+            await services.create_question(req.body.questions[i], survey_details.dataValues.id)
+        }
+      
+      let survey_info = await survey.findOne({
+        where: { id: survey_details.dataValues.id },
+        include: [
+          {
+            model: db.question, as: 'questions',
+            include: [{
+              model: db.option, as: "options"
+            }]
+          }
+        ]
       })
-      .catch((err) => {
-        console.log("error");
-        res.status(500).send({ message: err.message });
-      });
+      res.status(200).send(survey_info)
+    } catch (err) {
+      res.status(500).send(err)
+    }
   };
   
