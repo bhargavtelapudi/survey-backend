@@ -51,7 +51,7 @@ exports.users_list = (req, res) => {
   exports.survey_list = (req, res) => {
     //find all users
   survey.findOne({
-      where: { id: req.params.surveyId }
+      where: { userId: req.userId }
     })
     .then((survey) => {
       
