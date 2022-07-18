@@ -50,15 +50,7 @@ exports.users_list = (req, res) => {
   exports.survey_list = (req, res) => {
     //find all users
   survey.findAll({
-      where: { userId: req.userId },
-      include: [
-        {
-          model: db.question, as: 'questions',
-          include: [{
-            model: db.option, as: "options"
-          }]
-        }
-      ]
+      where: { userId: req.userId }
     })
     .then((surveys) => {
       
