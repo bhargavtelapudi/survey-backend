@@ -3,6 +3,7 @@ const config = require("../config/auth_config");
 const User = db.user;
 const survey = db.survey
 const services = require("../services/survey")
+const question = db.question
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -62,11 +63,15 @@ exports.users_list = (req, res) => {
   
   exports.delete_survey = (req, res) => {
     const id = req.params.surveyId;
-    Survey.destroy({
+    survey.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
+          //delete question
+          question.destroy({
+            where:{surveyId:id}
+          })
           res.send({
             message: "Survey was deleted successfully!"
           });
