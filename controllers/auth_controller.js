@@ -13,6 +13,8 @@ exports.sign_up = (req, res) => {
   let organization;
   if(req.body.organization == undefined){
     organization ="self"
+  }else{
+   organization = req.body.organization 
   }
   // Save User to Database
   User.create({
