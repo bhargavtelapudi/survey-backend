@@ -15,5 +15,6 @@ app.get("/api/admin/userlist", [protect.verifyToken,protect.isSuperAdmin], admin
 app.post("/api/create/survey", [protect.verifyToken], admin_controller.create_survey);
 app.get("/api/survey/list", [protect.verifyToken], admin_controller.survey_list);
 app.delete("/api/survey/:surveyId", [protect.verifyToken], admin_controller.delete_survey);
+app.get("/api/survey/:surveyId", [protect.verifyToken], admin_controller.view_survey);
 
 }
