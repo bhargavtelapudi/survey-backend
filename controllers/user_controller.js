@@ -50,12 +50,12 @@ exports.users_list = (req, res) => {
 
   exports.survey_list = (req, res) => {
     //find all users
-  survey.findAll({
-      where: { userId: req.userId }
+  survey.findOne({
+      where: { id: req.params.surveyId }
     })
-    .then((surveys) => {
+    .then((survey) => {
       
-      res.status(200).send(surveys);
+      res.status(200).send(survey);
     })
     .catch((err) => {
       console.log("error");
@@ -89,3 +89,26 @@ exports.users_list = (req, res) => {
         });
       });
   };
+
+
+  exports.view_survey = (req,res)=>{
+      
+   survey.findOne({
+      where: { id: req.params.surveyId },
+      include: [
+        {
+          model: db.question, as: 'questions',
+          include: [{
+            model: db.option, as: "options"
+          }]
+        }
+      ]
+    }) .then((survey) => {
+      
+      res.status(200).send(survey);
+    })
+    .catch((err) => {
+      console.log("error");
+      res.status(500).send({ message: err.message });
+    });
+  }
