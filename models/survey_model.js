@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Survey = sequelize.define("surveys", {
-      survey_title: {
+    survey_title: {
         type: Sequelize.STRING
       },
       survey_description: {
@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       survey_isPublished: {
         type: Sequelize.BOOLEAN
+      },
+      survey_url:{
+        type: Sequelize.STRING
       }
     });
   
