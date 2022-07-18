@@ -49,15 +49,25 @@ exports.users_list = (req, res) => {
 
   exports.survey_list = (req, res) => {
     //find all users
-   User.findOne({
-      where: {
-        id: req.userId
-      },
+  survey.findAll({
+      where: { userId: req.userId },
       include: [
-        { model: db.survey, as: 'survey' }]
-    }).then(userlist => {
-      return res.status(200).send(userlist);
+        {
+          model: db.question, as: 'questions',
+          include: [{
+            model: db.option, as: "options"
+          }]
+        }
+      ]
     })
+    .then((surveys) => {
+      
+      res.status(200).send(surveys);
+    })
+    .catch((err) => {
+      console.log("error");
+      res.status(500).send({ message: err.message });
+    });
   };
   
   exports.delete_survey = (req, res) => {
