@@ -112,3 +112,37 @@ exports.users_list = (req, res) => {
       res.status(500).send({ message: err.message });
     });
   }
+
+  exports.publish_survey = async(req, res) => {
+    //find all users
+    if(req.query.isPublished === "false"){
+    let update = await  survey.update(
+      {survey_isPublished:false},
+     { where: { id: req.params.surveyId }}
+    )
+    if(update == 0){
+      return res.status(200).send({
+        message:"Error occured.Please check surveyId and published values"
+      })
+    }
+    return res.status(200).send({
+      message:"unpublish successfull"
+    })
+     }
+     if(req.query.isPublished === "true"){
+    let update =  await  survey.update(
+       {survey_isPublished:true},
+      { where: { id: req.params.surveyId }}
+     )
+     console.log("update",update)
+     if(update == 0){
+      return res.status(200).send({
+        message:"Error occured.Please check surveyId and published values"
+      })
+    }
+     return res.status(200).send({
+      message:"publish successfull"
+    })
+      }
+
+    }
