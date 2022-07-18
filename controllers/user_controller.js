@@ -50,7 +50,7 @@ exports.users_list = (req, res) => {
 
   exports.survey_list = (req, res) => {
     //find all users
-  survey.findOne({
+  survey.findAll({
       where: { userId: req.userId }
     })
     .then((survey) => {
