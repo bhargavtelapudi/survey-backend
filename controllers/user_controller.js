@@ -2,7 +2,7 @@ const db = require("../models");
 const config = require("../config/auth_config");
 const User = db.user;
 const survey = db.survey
-const services = require("../services/survey")
+const services = require("../services/survey");
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -48,18 +48,36 @@ exports.users_list = (req, res) => {
   
 
   exports.survey_list = (req, res) => {
-    //find all users
+    if(req.query.user){
+      //get user
+      let user = await User.findOne({
+        where:{id:req.query.user}
+      })
+      if(user){
+        let survey_list = await survey.findAll({
+          where:{userId:user.id}
+        })
+        return res.status(200).send({
+          survey_list:survey_list,
+          user:{  
+            username:user.user_name,
+            organization:user.organization
+          }
+        })
+      }
+    }else{
+    //find all surveys
   survey.findAll({
       where: { userId: req.userId }
     })
     .then((surveys) => {
-      
       res.status(200).send(surveys);
     })
     .catch((err) => {
       console.log("error");
       res.status(500).send({ message: err.message });
     });
+  }
   };
   
   exports.delete_survey = (req, res) => {
