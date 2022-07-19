@@ -2,7 +2,9 @@ const db = require("../models");
 const config = require("../config/auth_config");
 const User = db.user;
 const survey = db.survey
-const services = require("../services/survey");
+
+const services = require("../services/survey")
+const question = db.question
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -72,8 +74,11 @@ exports.users_list = (req, res) => {
   survey.findAll({
       where: { userId: req.userId }
     })
-    .then((surveys) => {
-      res.status(200).send(surveys);
+
+    .then((survey) => {
+      
+      res.status(200).send(survey);
+
     })
     .catch((err) => {
       console.log("error");
@@ -84,11 +89,15 @@ exports.users_list = (req, res) => {
   
   exports.delete_survey = (req, res) => {
     const id = req.params.surveyId;
-    Survey.destroy({
+    survey.destroy({
       where: { id: id }
     })
       .then(num => {
         if (num == 1) {
+          //delete question
+          question.destroy({
+            where:{surveyId:id}
+          })
           res.send({
             message: "Survey was deleted successfully!"
           });
@@ -104,3 +113,60 @@ exports.users_list = (req, res) => {
         });
       });
   };
+
+
+  exports.view_survey = (req,res)=>{
+      
+   survey.findOne({
+      where: { id: req.params.surveyId },
+      include: [
+        {
+          model: db.question, as: 'questions',
+          include: [{
+            model: db.option, as: "options"
+          }]
+        }
+      ]
+    }) .then((survey) => {
+      
+      res.status(200).send(survey);
+    })
+    .catch((err) => {
+      console.log("error");
+      res.status(500).send({ message: err.message });
+    });
+  }
+
+  exports.publish_survey = async(req, res) => {
+    //find all users
+    if(req.query.isPublished === "false"){
+    let update = await  survey.update(
+      {survey_isPublished:false},
+     { where: { id: req.params.surveyId }}
+    )
+    if(update == 0){
+      return res.status(200).send({
+        message:"Error occured.Please check surveyId and published values"
+      })
+    }
+    return res.status(200).send({
+      message:"unpublish successfull"
+    })
+     }
+     if(req.query.isPublished === "true"){
+    let update =  await  survey.update(
+       {survey_isPublished:true},
+      { where: { id: req.params.surveyId }}
+     )
+     console.log("update",update)
+     if(update == 0){
+      return res.status(200).send({
+        message:"Error occured.Please check surveyId and published values"
+      })
+    }
+     return res.status(200).send({
+      message:"publish successfull"
+    })
+      }
+
+    }
