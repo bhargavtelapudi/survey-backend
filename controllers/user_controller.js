@@ -47,7 +47,7 @@ exports.users_list = (req, res) => {
   };
   
 
-  exports.survey_list = (req, res) => {
+  exports.survey_list =async (req, res) => {
     if(req.query.user){
       //get user
       let user = await User.findOne({
@@ -64,6 +64,8 @@ exports.users_list = (req, res) => {
             organization:user.organization
           }
         })
+      }else{
+        return res.status(404).send("user not found")
       }
     }else{
     //find all surveys
