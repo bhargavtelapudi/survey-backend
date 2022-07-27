@@ -2,7 +2,7 @@ const db = require("../models");
 const config = require("../config/auth_config");
 const User = db.user;
 const survey = db.survey
-
+const email_service = require("../services/email")
 const services = require("../services/survey")
 const question = db.question
 exports.users_list = (req, res) => {
@@ -113,6 +113,21 @@ exports.users_list = (req, res) => {
         });
       });
   };
+
+  exports.send_surveylink_email = async (req, res) => {
+    if (!req.body.survey_link || !req.body.user_email) {
+      return res.status(400).send({
+        message: "survey link and user email are required"
+      })
+    }
+    let email_sent = await email_service.send_email(req.body.survey_link, req.body.user_email)
+    if (email_sent) {
+      return res.status(200).send("email sent succesfully")
+    } else {
+      return res.status(200).send("email not sent")
+    }
+  }
+
 
 
   exports.view_survey = (req,res)=>{
