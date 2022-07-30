@@ -132,24 +132,53 @@ exports.users_list = (req, res) => {
 
   exports.view_survey = (req,res)=>{
       
-   survey.findOne({
-      where: { id: req.params.surveyId },
-      include: [
-        {
-          model: db.question, as: 'questions',
-          include: [{
-            model: db.option, as: "options"
-          }]
-        }
-      ]
-    }) .then((survey) => {
-      
-      res.status(200).send(survey);
-    })
-    .catch((err) => {
-      console.log("error");
-      res.status(500).send({ message: err.message });
-    });
+    if (req.query.responses = true) {
+      console.log("inn")
+      survey.findOne({
+        where: { id: req.params.surveyId },
+        include: [
+          {
+            model: db.question, as: 'questions',
+            include: [
+              {
+                model: db.option, as: "options",
+              },
+              {
+                model: db.surveyresponse, as: "surveyresponse",
+                include: [{
+                  model: db.participant, as: "participant"
+                }]
+              }
+            ]
+          }
+        ]
+      }).then((survey) => {
+        res.status(200).send(survey);
+      })
+        .catch((err) => {
+          console.log("error");
+          res.status(500).send({ message: err.message });
+        });
+    } else {
+      survey.findOne({
+        where: { id: req.params.surveyId },
+        include: [
+          {
+            model: db.question, as: 'questions',
+            include: [{
+              model: db.option, as: "options"
+            }]
+          }
+        ]
+      }).then((survey) => {
+  
+        res.status(200).send(survey);
+      })
+        .catch((err) => {
+          console.log("error");
+          res.status(500).send({ message: err.message });
+        });
+    }
   }
 
   exports.publish_survey = async(req, res) => {
