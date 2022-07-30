@@ -185,3 +185,32 @@ exports.users_list = (req, res) => {
       }
 
     }
+
+    exports.survey_questions = async (req, res) => {
+
+      survey.findOne({
+        where: { id: req.params.surveyId },
+        include: [
+          {
+            model: db.question, as: 'questions',
+            include: [{
+              model: db.option, as: "options"
+            }]
+          }
+        ]
+      }).then((survey) => {
+        if (!survey || !survey.dataValues.survey_isPublished) {
+          return res.status(400).json({
+            message: "Survey not found"
+          })
+        }
+        res.status(200).send(survey);
+      })
+        .catch((err) => {
+          console.log("error");
+          res.status(500).send({ message: err.message });
+        });
+    }
+
+
+    

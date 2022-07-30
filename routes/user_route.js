@@ -18,5 +18,6 @@ app.delete("/api/survey/:surveyId", [protect.verifyToken], admin_controller.dele
 app.get("/api/survey/:surveyId", [protect.verifyToken], admin_controller.view_survey);
 app.put("/api/survey/:surveyId", [protect.verifyToken], admin_controller.publish_survey);
 app.post("/api/survey/sendemail", [protect.verifyToken], admin_controller.send_surveylink_email)
+app.get("/api/complete/surveys/:surveyId", admin_controller.survey_questions);
 
 }
