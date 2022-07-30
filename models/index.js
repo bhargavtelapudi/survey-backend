@@ -53,4 +53,27 @@ db.option.belongsTo(db.question, {
   foreignKey: 'questionId', as: 'question',
 });
 
+//relation between response and participant
+db.participant.hasMany(db.surveyresponse, {
+  as: 'surveyresponse'
+});
+db.surveyresponse.belongsTo(db.participant, {
+  foreignKey: 'participantId', as: 'participant',
+});
+
+//relation between question and response
+db.question.hasMany(db.surveyresponse, {
+  as: 'surveyresponse'
+});
+db.surveyresponse.belongsTo(db.question, {
+  foreignKey: 'questionId', as: 'question',
+});
+
+//relation between praticipant and survey
+db.survey.hasMany(db.participant, {
+  as: 'participant'
+});
+db.participant.belongsTo(db.survey, {
+  foreignKey: 'surveyId', as: 'survey',
+});
 module.exports = db;
