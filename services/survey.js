@@ -48,3 +48,32 @@ return question_details
     })
     return optionn;
   }
+
+
+//check endUserDetails
+exports.response_exists = async (participant_email, survey_id) => {
+  // Email
+  let exists = await participant.findOne({
+    where: {
+      email_id: participant_email, surveyId: survey_id
+    }
+  })
+  console.log(exists)
+  if (exists !== null) {
+    return true
+  }
+  return false
+};
+
+exports.save_participant = async (participant_email, participant_name, survey_id) => {
+  try {
+    let Participant = await participant.create({
+      participant_name: participant_name,
+      email_id: participant_email,
+      surveyId: survey_id
+    })
+    return Participant
+  } catch (err) {
+    return err
+  }
+};
