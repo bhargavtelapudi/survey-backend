@@ -28,8 +28,9 @@ db.user = require("../models/user_model")(sequelize, Sequelize);
 db.survey = require("./survey_model")(sequelize,Sequelize)
 db.question = require("./question_model")(sequelize,Sequelize)
 db.option = require("./option_model")(sequelize,Sequelize)
-
-//relatin between user and survey tables
+db.participant = require("./participant_model")(sequelize, Sequelize)
+db.surveyresponse = require("./surveyresponses_model")(sequelize, Sequelize)
+//relation between user and survey tables
 db.user.hasMany(db.survey, {
   as: 'surveys'
 });
