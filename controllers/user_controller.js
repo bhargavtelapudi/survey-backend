@@ -241,5 +241,46 @@ exports.users_list = (req, res) => {
         });
     }
 
+    //delete user
+exports.delete_user = async (req, res) => {
+  const id = req.params.userId;
+  User.destroy({
+    where: { id: id, user_type: "user" }
+  })
+    .then(async num => {
+      if (num == 1) {
+        //delete question
+        let delete_user_surveys = await survey.destroy({
+          where: { userId: null }
+        })
+        let delete_survey_questions = await question.destroy({
+          where: { surveyId: null }
+        })
+        let delete_questions_options = await option.destroy({
+          where: {
+            questionId: null
+          }
+        })
+        let delete_participant_details = await participant.destroy({
+          where: { surveyId: null }
+        })
+        let delete_response_details = await surveyresponse.destroy({
+          where: { questionId: null }
+        })
+        res.send({
+          message: "user was deleted successfully!"
+        });
+      } else {
+        res.sattus(404).send({
+          message: `Cannot delete user  with id=${id}. Maybe User was not found!`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Could not delete survey with id=" + id
+      });
+    });
+};
 
     
