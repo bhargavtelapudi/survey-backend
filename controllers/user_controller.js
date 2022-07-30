@@ -212,6 +212,57 @@ exports.users_list = (req, res) => {
       message:"publish successfull"
     })
       }
+      else{
+        console.log("innn")
+        let survey_info = await survey.findOne({
+          where: { id: req.params.surveyId },
+          include: [
+            {
+              model: db.question, as: 'questions',
+              include: [{
+                model: db.option, as: "options"
+              }]
+            }
+          ]
+        })
+        console.log("survey", survey_info.dataValues.questions)
+        survey_info.survey_title = req.body.title
+        survey_info.survey_description = req.body.description
+        survey_info.survey_isPublished = req.body.isPublished
+        var new_questions = []
+        console.log("her")
+        for (let i = 0; i < survey_info.dataValues.questions.length; i++) {
+          var question_found = false
+          for (j = 0; j < req.body.questions.length; j++) {
+            console.log("id", req.body.questions)
+  
+            if (req.body.questions[j].id == "new") {
+  
+              let create_question = await services.create_question(req.body.questions[j], survey_info.dataValues.id)
+              console.log("create_question", create_question)
+              req.body.questions.splice(j, j + 1)
+            } else {
+              if (survey_info.dataValues.questions[i].id == req.body.questions[j].id) {
+                console.log("thee", survey_info.dataValues.questions[i])
+                question_found = true
+                let update_question_info = await services.update_question(req.body.questions[j], survey_info.dataValues.questions[i])
+              }
+            }
+          }
+          if (!question_found) {
+            console.log("delet", question_found)
+            //delete question
+            await question.destroy({
+              where: { id: survey_info.dataValues.questions[i].id }
+            })
+          }
+        }
+        survey_info.save()
+        return res.status(200).send({
+          message: "survey updated successfully"
+        })
+
+      }
 
     }
 

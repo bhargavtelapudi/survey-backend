@@ -77,3 +77,39 @@ exports.save_participant = async (participant_email, participant_name, survey_id
     return err
   }
 };
+
+exports.update_question = async (question_info, existing_question) => {
+  console.log("question_info", question_info)
+  console.log("existing_question", existing_question)
+
+  // Email
+  let update_question = await question.update(
+    { title: question_info.title, required: question_info.required },
+    { where: { id: question_info.id } }
+  )
+  if (question_info.question_type == "multiple-choice") {
+    for (let i = 0; i < existing_question.dataValues.options.length; i++) {
+      let option_found = false
+      for (let j = 0; j < question_info.options.length; j++) {
+        if (existing_question.dataValues.options[i].id == question_info.options[j].id) {
+          option_found = true
+          await option.update(
+            { option: question_info.options[j].option },
+            { where: { id: question_info.options[j].id } }
+          )
+        }
+      }
+      if (!option_found) {
+        await option.destroy({
+          where: { id: existing_question.dataValues.options[i].id }
+        })
+      }
+    }
+
+  }
+  console.log("question", update_question)
+
+  return true
+
+
+};
