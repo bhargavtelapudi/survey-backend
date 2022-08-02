@@ -153,6 +153,40 @@ exports.users_list = (req, res) => {
           }
         ]
       }).then((survey) => {
+           //calcuate answers
+    for (let i = 0; i < survey.dataValues.questions.length; i++) {
+      if (survey.dataValues.questions[i].type == "multiple-choice") {
+        for (
+          let j = 0;
+          j < survey.dataValues.questions[i].options.length;
+          j++
+        ) {
+          for (
+            let k = 0;
+            k < survey.dataValues.questions[i].responses.length;
+            k++
+          ) {
+            if (
+              survey.dataValues.questions[i].options[j].options ==
+              survey.dataValues.questions[i].responses[k].response
+            ) {             
+              if (
+                survey.dataValues.questions[i].options[j].dataValues
+                  .count
+              ) {
+                survey.dataValues.questions[i].options[j].dataValues
+                  .count++;
+              } else {
+
+                survey.dataValues.questions[i].option[
+                  j
+                ].dataValues.count = 1;
+              }
+            }
+          }
+        }
+      }
+    }
         res.status(200).send(survey);
       })
         .catch((err) => {
