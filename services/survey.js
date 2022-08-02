@@ -79,35 +79,63 @@ exports.save_participant = async (participant_email, participant_name, survey_id
 };
 
 exports.update_question = async (question_info, existing_question) => {
-  console.log("question_info", question_info)
-  console.log("existing_question", existing_question)
-
-  // Email
   let update_question = await question.update(
-    { title: question_info.title, required: question_info.required },
+    { question: question_info.title, required: question_info.required },
     { where: { id: question_info.id } }
-  )
+  );
+
   if (question_info.question_type == "multiple-choice") {
-    for (let i = 0; i < existing_question.dataValues.options.length; i++) {
-      let option_found = false
-      for (let j = 0; j < question_info.options.length; j++) {
-        if (existing_question.dataValues.options[i].id == question_info.options[j].id) {
-          option_found = true
-          await option.update(
-            { option: question_info.options[j].option },
-            { where: { id: question_info.options[j].id } }
-          )
+    let new_choices = [];
+    if (existing_question.dataValues.options.length == 0) {
+      for (let i = 0; i < question_info.options.length; i++) {
+        await option.create({
+          option: question_info.options[i].option,
+          questionId: existing_question.dataValues.id,
+        });
+      }
+    } else {
+      for (let i = 0; i < existing_question.dataValues.options.length; i++) {
+        let option_found = false;
+        for (let j = 0; j < question_info.options.length; j++) {
+          if (question_info.options[j].id == undefined) {
+            if (new_choices.length == 0) {
+              new_choices.push(question_info.options[j]);
+            } else {
+              for (let k = 0; k < new_choices.length; k++) {
+                if (new_choices[k].option !== question_info.options[j].option) {
+                  new_choices.push(question_info.options[j]);
+                }
+              }
+            }
+          } else {
+            if (
+              existing_question.dataValues.options[i].id ==
+              question_info.options[j].id
+            ) {
+              option_found = true;
+              await option.update(
+                { option: question_info.options[j].option },
+                { where: { id: question_info.options[j].id } }
+              );
+            }
+          }
+        }
+
+        if (!option_found) {
+          await option.destroy({
+            where: { id: existing_question.dataValues.option[i].id },
+          });
         }
       }
-      if (!option_found) {
-        await option.destroy({
-          where: { id: existing_question.dataValues.options[i].id }
-        })
+      for (let i = 0; i < new_choices.length; i++) {
+        await option.create({
+          option: new_choices[i].option,
+          questionId: existing_question.dataValues.id,
+        });
       }
     }
-
   }
-  console.log("question", update_question)
+
 
   return true
 

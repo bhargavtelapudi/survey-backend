@@ -213,54 +213,78 @@ exports.users_list = (req, res) => {
     })
       }
       else{
-        console.log("innn")
-        let survey_info = await survey.findOne({
+        await survey.findOne({
           where: { id: req.params.surveyId },
           include: [
             {
-              model: db.question, as: 'questions',
-              include: [{
-                model: db.option, as: "options"
-              }]
+              model: db.question,
+              as: "questions",
+              include: [
+                {
+                  model: db.option,
+                  as: "options",
+                },
+              ],
+            },
+          ],
+        }).then(async (survey) => {
+          survey.survey_title = req.body.title;
+          survey.survey_description = req.body.description;
+          survey.survey_isPublished = req.body.isPublished;
+          let questions_added = [];
+          if (survey.dataValues.questions.length == 0) {
+            for (let i = 0; i < req.body.questions.length; i++) {
+              if (questions_added.length == 0) {
+                questions_added.push(req.body.questions[i]);
+              } else {
+                for (let k = 0; k < questions_added.length; k++) {
+                  if (questions_added[k].survey_title !== req.body.questions[i].title) {
+                    questions_added.push(req.body.questions[i]);
+                  }
+                }
+              }
             }
-          ]
-        })
-        console.log("survey", survey_info.dataValues.questions)
-        survey_info.survey_title = req.body.title
-        survey_info.survey_description = req.body.description
-        survey_info.survey_isPublished = req.body.isPublished
-        var new_questions = []
-        console.log("her")
-        for (let i = 0; i < survey_info.dataValues.questions.length; i++) {
-          var question_found = false
-          for (j = 0; j < req.body.questions.length; j++) {
-            console.log("id", req.body.questions)
-  
-            if (req.body.questions[j].id == "new") {
-  
-              let create_question = await services.create_question(req.body.questions[j], survey_info.dataValues.id)
-              console.log("create_question", create_question)
-              req.body.questions.splice(j, j + 1)
-            } else {
-              if (survey_info.dataValues.questions[i].id == req.body.questions[j].id) {
-                console.log("thee", survey_info.dataValues.questions[i])
-                question_found = true
-                let update_question_info = await services.update_question(req.body.questions[j], survey_info.dataValues.questions[i])
+          } else {
+            for (let i = 0; i < survey.dataValues.questions.length; i++) {
+              var question_found = false;
+              for (j = 0; j < req.body.questions.length; j++) {
+                if (req.body.questions[j].id == undefined) {
+                  if (questions_added.length == 0) {
+                    questions_added.push(req.body.questions[i]);
+                  } else {
+                    for (let k = 0; k < questions_added.length; k++) {
+                      if (questions_added[k].title !== req.body.questions[j].title) {
+                        questions_added.push(req.body.questions[i]);
+                      }
+                    }
+                  }
+                } else {
+                  if (survey.dataValues.questions[i].id == req.body.questions[j].id) {
+                    question_found = true;
+                    let questionUpdate = await services.update_question(
+                      req.body.questions[j],
+                      survey.dataValues.questions[i]
+                    );
+                  }
+                }
+              }
+              if (!question_found) {
+                //delete question
+                await question.destroy({
+                  where: { id: survey.dataValues.questions[i].id },
+                });
               }
             }
           }
-          if (!question_found) {
-            console.log("delet", question_found)
-            //delete question
-            await question.destroy({
-              where: { id: survey_info.dataValues.questions[i].id }
-            })
+      
+          for (let n = 0; n < question_found.length; n++) {
+            await createQuestion(question_found[n], survey.dataValues.id);
           }
-        }
-        survey_info.save()
-        return res.status(200).send({
-          message: "survey updated successfully"
-        })
+          survey.save();
+          return res.status(200).send({
+            message: "survey updated successfully",
+          });
+        });
 
       }
 
