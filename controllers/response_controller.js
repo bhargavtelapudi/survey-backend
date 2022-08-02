@@ -36,8 +36,8 @@ exports.submit_survey = async (req, res) => {
       await response.create({
         response: req.body.responses[i].response,
         participantId: Participant.dataValues.id,
-        questionId: req.body.responses[i].id
-      })
+        questionId: req.body.responses[i].id,
+        surveyId:req.query.surveyId      })
     }
 
     return res.status(200).send({
