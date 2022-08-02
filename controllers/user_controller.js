@@ -5,6 +5,7 @@ const survey = db.survey
 const email_service = require("../services/email")
 const services = require("../services/survey")
 const question = db.question
+const response = db.surveyresponse
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -392,4 +393,50 @@ exports.delete_user = async (req, res) => {
     });
 };
 
-    
+
+exports.surveyReport = async (req, res) => {
+  let reports = []
+  console.log("here")
+  let survey_responses = await response.findAll({
+    where: { surveyId: req.query.surveyId },
+    include: ["question", "participant"],
+  })
+  console.log("sur",survey_responses)
+  for (let i = 0; i < survey_responses.length; i++) {
+    if (reports.length == 0) {
+      let object ={
+        'user email':survey_responses[i].participant.email_id,
+        'user name':survey_responses[i].participant.participant_name
+      }
+      reports.push( object )
+    } else {
+      email_found = false
+      for (let j = 0; j < reports.length; j++) {
+        if (survey_responses[i].participant.email_id == reports[j]['user email']) {
+          email_found = true
+        }
+      }
+      if (!email_found) {
+        let object ={
+          'user email':survey_responses[i].participant.email_id,
+          'user name':survey_responses[i].participant.participant_name
+        }
+        reports.push(object)
+      }
+    }
+  }
+  console.log("survey",survey_responses.dataValues)
+  for (let i = 0; i < survey_responses.length; i++) {
+    console.log("in")
+    console.log("survey",survey_responses[i].dataValues)
+
+    for (let j = 0; j < reports.length; j++) {
+      console.log(survey_responses[i].participant.email_id,reports[j]["user email"])
+      if (survey_responses[i].participant.email_id == reports[j]["user email"]) {
+        let question = survey_responses[i].question.title
+        reports[j][question] = survey_responses[i].response
+      }
+    }
+  }
+  return res.status(200).send(reports);
+}

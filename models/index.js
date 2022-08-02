@@ -77,4 +77,12 @@ db.survey.hasMany(db.participant, {
 db.participant.belongsTo(db.survey, {
   foreignKey: 'surveyId', as: 'survey',
 });
+
+//response and surveys
+db.survey.hasMany(db.surveyresponse, {
+  as: 'surveyresponse'
+});
+db.surveyresponse.belongsTo(db.survey, {
+  foreignKey: 'surveyId', as: 'survey',
+});
 module.exports = db;
