@@ -3,6 +3,8 @@ const db = require("../models");
 const survey = db.survey;
 const question = db.question
 const option = db.option
+const participant = db.participant
+const response = db.response
 exports.create_survey = async (survey_title,survey_description,survey_isPublished,userId) => {
   try {
     //create survey
@@ -123,7 +125,7 @@ exports.update_question = async (question_info, existing_question) => {
 
         if (!option_found) {
           await option.destroy({
-            where: { id: existing_question.dataValues.option[i].id },
+            where: { id: existing_question.dataValues.options[i].id },
           });
         }
       }

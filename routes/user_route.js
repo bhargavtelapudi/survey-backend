@@ -15,7 +15,7 @@ app.get("/api/admin/userlist", [protect.verifyToken,protect.isSuperAdmin], admin
 app.post("/api/create/survey", [protect.verifyToken], admin_controller.create_survey);
 app.get("/api/survey/list", [protect.verifyToken], admin_controller.survey_list);
 app.delete("/api/survey/:surveyId", [protect.verifyToken], admin_controller.delete_survey);
-app.get("/api/survey/:surveyId", [protect.verifyToken], admin_controller.view_survey);
+app.get("/api/survey/:surveyId", admin_controller.view_survey);
 app.put("/api/survey/:surveyId", [protect.verifyToken], admin_controller.publish_survey);
 app.post("/api/survey/sendemail", [protect.verifyToken], admin_controller.send_surveylink_email)
 app.get("/api/complete/surveys/:surveyId", admin_controller.survey_questions);

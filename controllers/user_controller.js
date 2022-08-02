@@ -178,7 +178,7 @@ exports.users_list = (req, res) => {
                   .count++;
               } else {
 
-                survey.dataValues.questions[i].option[
+                survey.dataValues.questions[i].options[
                   j
                 ].dataValues.count = 1;
               }
