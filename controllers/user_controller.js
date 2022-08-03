@@ -314,8 +314,8 @@ exports.users_list = (req, res) => {
             }
           }
       
-          for (let n = 0; n < question_found.length; n++) {
-            await services.create_question(question_found[n], survey.dataValues.id);
+          for (let n = 0; n < questions_added.length; n++) {
+            await services.create_question(questions_added[n], survey.dataValues.id);
           }
           survey.save();
           return res.status(200).send({
