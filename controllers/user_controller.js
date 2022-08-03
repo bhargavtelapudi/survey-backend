@@ -5,7 +5,9 @@ const survey = db.survey
 const email_service = require("../services/email")
 const services = require("../services/survey")
 const question = db.question
+const option = db.option
 const response = db.surveyresponse
+const participant = db.participant
 exports.users_list = (req, res) => {
     //find all users
     User.findAll({
@@ -374,10 +376,10 @@ exports.delete_user = async (req, res) => {
         let delete_participant_details = await participant.destroy({
           where: { surveyId: null }
         })
-        let delete_response_details = await surveyresponse.destroy({
+        let delete_response_details = await response.destroy({
           where: { questionId: null }
         })
-        res.send({
+        res.status(200).send({
           message: "user was deleted successfully!"
         });
       } else {
