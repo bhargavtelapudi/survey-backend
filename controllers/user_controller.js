@@ -315,7 +315,7 @@ exports.users_list = (req, res) => {
           }
       
           for (let n = 0; n < question_found.length; n++) {
-            await createQuestion(question_found[n], survey.dataValues.id);
+            await services.create_question(question_found[n], survey.dataValues.id);
           }
           survey.save();
           return res.status(200).send({
