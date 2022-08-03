@@ -286,6 +286,7 @@ exports.users_list = (req, res) => {
               var question_found = false;
               for (j = 0; j < req.body.questions.length; j++) {
                 if (req.body.questions[j].id == undefined) {
+                  question_found = true
                   if (questions_added.length == 0) {
                     questions_added.push(req.body.questions[i]);
                   } else {
