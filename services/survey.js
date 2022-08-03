@@ -82,7 +82,7 @@ exports.save_participant = async (participant_email, participant_name, survey_id
 
 exports.update_question = async (question_info, existing_question) => {
   let update_question = await question.update(
-    { question: question_info.title, required: question_info.required },
+    { title: question_info.title, required: question_info.required },
     { where: { id: question_info.id } }
   );
 
