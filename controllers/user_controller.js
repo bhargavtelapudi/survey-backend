@@ -275,7 +275,7 @@ exports.users_list = (req, res) => {
                 questions_added.push(req.body.questions[i]);
               } else {
                 for (let k = 0; k < questions_added.length; k++) {
-                  if (questions_added[k].survey_title !== req.body.questions[i].title) {
+                  if (questions_added[k].title !== req.body.questions[i].title) {
                     questions_added.push(req.body.questions[i]);
                   }
                 }
